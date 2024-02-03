@@ -1,3 +1,4 @@
+const { isAdmin } = require("../../middlewares/auth");
 const { getViajeById, getViajes, getViajeByPaquete, getViajeByPrice, postViaje, updatViaje, deleteViaje } = require("../controllers/viajes");
 
 
@@ -7,9 +8,9 @@ viajesRouter.get("/precio/:precio", getViajeByPrice)
 viajesRouter.get("/paquete/:paquete", getViajeByPaquete)
 viajesRouter.get("/:id", getViajeById)
 viajesRouter.get("/", getViajes);
-viajesRouter.post("/", postViaje)
-viajesRouter.put("/:id",updatViaje)
-viajesRouter.delete("/:id", deleteViaje)
+viajesRouter.post("/", [isAdmin],postViaje)
+viajesRouter.put("/:id", [isAdmin],updatViaje)
+viajesRouter.delete("/:id", [isAdmin],deleteViaje)
 
 
 

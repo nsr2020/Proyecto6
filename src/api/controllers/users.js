@@ -1,6 +1,10 @@
 const { generateSign } = require("../../config/jwt");
+const { deleteFile } = require("../../utils/deleteFile");
 const User = require("../models/users")
 const bcrypt = require("bcrypt")
+
+
+//!Aqui tenemos acceso a todos los usuarios registrados
 
 const getUsers = async (req, res, next) =>{
   try {
@@ -9,7 +13,6 @@ const getUsers = async (req, res, next) =>{
   } catch (error) {
     return res.status(400).json(error)
   }
-
 }
 
 
@@ -23,8 +26,12 @@ const register = async (req, res, next) =>{
       password:req.body.password,
       yearBirth: req.body.yearBirth,
       rol: "user", 
-      picProfile: req.body.picProfile
+      imagen: req.body.imagen
     })
+
+    if (req.file){
+      newUser.imagen = req.file.path;
+    }
 
     //para hacer que el usuario sea único
 
@@ -64,7 +71,43 @@ const login = async (req, res, next) => {
   }
 }
 
+//!aqui vamos a poder modificar un usuario con Put
+const updateUser = async (req, res, next) =>{
+  try {
+    const {id} = req.params;
+    const newUser = new User(req.body)
+    newUser._id=id;
+
+    if(req.file){
+      newUser.imagen = req.file.path;
+      const oldUser = await User.findById(id)
+      deleteFile(oldUser.imagen)
+    }
+
+    const userUpdated = await User.findByIdAndUpdate(id, newUser,
+      {
+        new:true
+      })
+      return res.status(200).json(userUpdated)
+
+  } catch (error) {
+    return res.status(400).json(error)
+  }
+}
+
+
+//!Aqui vamos a poder eliminar un usuario con Delete
+const deleteUser = async (req, res, next) =>{
+  try {
+    const { id } = req.params
+    const userDeleted = await User.findByIdAndDelete(id)
+    deleteFile(userDeleted.imagen)
+    return res.status(200).json(userDeleted)
+  } catch (error) {
+    return res.status(400).json(error)
+  }
+}
 
 //exportaciones 
 
-module.exports = { getUsers, register, login }
+module.exports = { getUsers, register, login , updateUser, deleteUser}

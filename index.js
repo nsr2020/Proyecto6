@@ -2,12 +2,17 @@ require("dotenv").config();
 
 const express = require("express");
 const { connectDB } = require("./src/config/db");
-const viajesRouter = require("./src/api/routes/viajes");
-const hotelesRouter = require("./src/api/routes/hoteles");
 const cors = require("cors"); // nos vale para poder usar el front y que se pueda abrir la página.
-const usersRoutes = require("./src/api/routes/users");
+const mainRouter = require("./src/api/routes/main");
+const cloudinary = require("cloudinary").v2;
 
 const app =  express();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret:process.env.API_SECRET
+})
 
 app.use(express.json());
  // me permite que mi servidor sea capaz de recibir cuerpos en formato json
@@ -16,9 +21,8 @@ app.use(express.json());
 
 connectDB();
 
-app.use("/api/v1/hoteles", hotelesRouter)
-app.use("/api/v1/viajes", viajesRouter)
-app.use("/api/v1/users",usersRoutes )
+app.use("/api/v1/", mainRouter)
+
 
 app.use("*",(req,res, next) =>{
   return res.status(404).json("Route not found")

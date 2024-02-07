@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema(
       enum: ['admin', 'user'],
       default: 'user'
     },
-    picProfile: { type: String, trim: true, required: true }
+    imagen: { type: String, trim: true, required: true }
   },
   {
     timestamps: true,

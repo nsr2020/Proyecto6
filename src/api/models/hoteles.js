@@ -6,7 +6,7 @@ const hotelesSchema = new mongoose.Schema(
     imagen: {type:String, required:true},
     nombre:{type:String, required:true},
     estrellas:{type:Number, required:false},
-    pais:{type:String, required:true, enum:["Republica Dominicana", "Mexico","Jamaica"]},
+    pais:{type:String, required:true, enum:["Republica Dominicana", "Mexico","Jamaica", "Costa Rica"]},
     verified:{type:Boolean, required: true, default: false}
   },
   {

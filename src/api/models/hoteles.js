@@ -11,7 +11,7 @@ const hotelesSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-    collection: "hoteles"
+    collection: "hoteles"   
   }
 )
 
